@@ -1,3 +1,5 @@
+import React from 'react'; // Import the React object
+
 import logo from './logo.svg';
 import './App.css';
 
