@@ -6,6 +6,9 @@ import ProductsPage from './components/ProductsPage';
 import ProductDetail from './components/ProductDetail';
 import Navbar from './components/Navbar';
 import styled, { createGlobalStyle } from 'styled-components';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -42,6 +45,7 @@ const App = () => {
           <Switch>
             <Route exact path="/" component={Login} />
             <Route path="/signup" component={Signup} />
+            <Route path="/login" component={Login} />
             <Route path="/products" component={ProductsPage} />
             <Route path="/product/:productId" component={ProductDetail} />
           </Switch>
