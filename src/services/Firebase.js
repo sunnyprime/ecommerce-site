@@ -1,17 +1,22 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import "firebase/compat/firestore";
+ // Import specific Firebase services you need
+
+
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBR3dqHJ7PDHsc6qdQia2RE94TPUHqJUug',
-  authDomain: 'gpt-ecommerce-8abd9.firebaseapp.com',
-  projectId: 'gpt-ecommerce-8abd9',
-  storageBucket: 'gpt-ecommerce-8abd9.appspot.com',
-  messagingSenderId: '708367369372',
-  appId: '1:708367369372:web:2c3d7563b5ffb340905959'
+    apiKey: "AIzaSyAAMPYlr_0pOw9d2vWPjTNNkoCB1AP_ybw",
+    authDomain: "gpt-ecommere.firebaseapp.com",
+    projectId: "gpt-ecommere",
+    storageBucket: "gpt-ecommere.appspot.com",
+    messagingSenderId: "478436798668",
+    appId: "1:478436798668:web:ca9d90902a99f554479269"
 };
 
-firebase.initializeApp(firebaseConfig);
-
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  
+  const db = firebase.firestore(); // Initialize Firestore instance
+  
+  export { firebase, db };
