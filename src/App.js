@@ -37,7 +37,7 @@ const ContentContainer = styled.div`
 `;
 
 const App = () => {
-  console.log("Inside App:",`${process.env.REACT_APP_FIREBASE_API_KEY}`,"and",secrets.REACT_APP_FIREBASE_API_KEY);
+  console.log("Inside App:",`${process.env.REACT_APP_FIREBASE_API_KEY}`);
   return (
     <Router>
       <Navbar />
