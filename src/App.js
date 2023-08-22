@@ -6,9 +6,10 @@ import ProductsPage from './components/ProductsPage';
 import ProductDetail from './components/ProductDetail';
 import Navbar from './components/Navbar';
 import styled, { createGlobalStyle } from 'styled-components';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 
-dotenv.config();
+// dotenv.config();
+
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -36,6 +37,7 @@ const ContentContainer = styled.div`
 `;
 
 const App = () => {
+
   return (
     <Router>
       <Navbar />
