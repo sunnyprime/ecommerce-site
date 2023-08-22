@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {auth} from '../services/Firebase';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import 'firebase/auth';
 import styled from 'styled-components';
 
@@ -118,6 +118,7 @@ const LoginPage = () => {
     <Container>
       <AuthContainer>
         <Title>Login</Title>
+        {error? <p>{error}</p>:""}
         <form onSubmit={(e) => e.preventDefault()}>
           <InputBox>
             <Input

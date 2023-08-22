@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
-import { useSpring, animated } from 'react-spring';
 
 const NavbarContainer = styled.nav`
   position: relative;
@@ -93,11 +92,6 @@ const GlobalStyles = createGlobalStyle`
 
 
 const Navbar = () => {
-  const navbarProps = useSpring({
-    opacity: 1,
-    from: { opacity: 0 },
-  });
-
   return (
     <NavbarContainer>
       <GlobalStyles />
