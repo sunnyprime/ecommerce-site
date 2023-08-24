@@ -1,9 +1,7 @@
 import firebase from 'firebase/compat/app';
-import "firebase/compat/firestore";
+import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
- // Import specific Firebase services you need
-
-
+// Import specific Firebase services you need
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -14,13 +12,12 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-
 if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  const firebaseApp = firebase.initializeApp(firebaseConfig);
-  const auth = firebaseApp.auth();
-  
-  const db = firebase.firestore(); // Initialize Firestore instance
-  
-  export { firebase, db,auth };
+  firebase.initializeApp(firebaseConfig);
+}
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const auth = firebaseApp.auth();
+
+const db = firebase.firestore(); // Initialize Firestore instance
+
+export { firebase, db, auth };

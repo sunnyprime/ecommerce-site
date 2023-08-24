@@ -9,7 +9,6 @@ import Navbar from './components/Navbar';
 import styled, { createGlobalStyle } from 'styled-components';
 import { auth } from './services/Firebase';
 
-
 const GlobalStyles = createGlobalStyle`
   body {
     margin: 0;
@@ -23,7 +22,6 @@ const AppContainer = styled.div`
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  
 `;
 
 const ContentContainer = styled.div`
@@ -54,10 +52,13 @@ const App = () => {
         });
     }
   }, []);
-  console.log("Inside App JS");
+  console.log('Inside App JS');
   return (
     <Router>
-      <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
+      <Navbar
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
+      />
       {/* <Login setIsAuthenticated={setIsAuthenticated} test="123" /> */}
       <AppContainer>
         <GlobalStyles />
@@ -65,8 +66,18 @@ const App = () => {
           <Switch>
             <Route exact path="/" component={Login} />
             <Route path="/forgot-password" component={ForgotPassword} />
-            <Route path="/signup" render={(props) => <Signup {...props} setIsAuthenticated={setIsAuthenticated} />} />
-            <Route path="/login" render={(props) => <Login {...props} setIsAuthenticated={setIsAuthenticated} />} />
+            <Route
+              path="/signup"
+              render={(props) => (
+                <Signup {...props} setIsAuthenticated={setIsAuthenticated} />
+              )}
+            />
+            <Route
+              path="/login"
+              render={(props) => (
+                <Login {...props} setIsAuthenticated={setIsAuthenticated} />
+              )}
+            />
             <Route path="/products" component={ProductsPage} />
             <Route path="/product/:productId" component={ProductDetail} />
           </Switch>

@@ -100,7 +100,7 @@ const SocialLink = styled.button`
     padding-right: 12px;
     font-size: 20px;
   }
-};`
+};`;
 
 const FacebookLink = styled.div`
 display: block;
@@ -127,7 +127,7 @@ display: block;
     font-size: 20px;
   }
 };
-`
+`;
 
 const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState('');
@@ -140,11 +140,14 @@ const Login = ({ setIsAuthenticated }) => {
     history.push('/forgot-password');
   };
 
-  const handleLogin = async e => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const userCredential = await auth.signInWithEmailAndPassword(
+        email,
+        password
+      );
       const user = userCredential.user;
       console.log('Logged in successfully:', user);
 
@@ -161,7 +164,9 @@ const Login = ({ setIsAuthenticated }) => {
 
   const handleGmailLogin = async () => {
     try {
-      const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); // Use GoogleAuthProvider
+      const result = await auth.signInWithPopup(
+        new firebase.auth.GoogleAuthProvider()
+      ); // Use GoogleAuthProvider
       const user = result.user;
       console.log('Logged in with Gmail successfully:', user);
 
@@ -177,7 +182,9 @@ const Login = ({ setIsAuthenticated }) => {
   };
   const handleFacebookLogin = async () => {
     try {
-      const result = await auth.signInWithPopup(new firebase.auth.FacebookAuthProvider()); // Use FacebookAuthProvider
+      const result = await auth.signInWithPopup(
+        new firebase.auth.FacebookAuthProvider()
+      ); // Use FacebookAuthProvider
       const user = result.user;
       console.log('Logged in with Facebook successfully:', user);
 
@@ -190,7 +197,7 @@ const Login = ({ setIsAuthenticated }) => {
       setError('Error logging in with Facebook: ' + error.message);
       console.error('Error logging in with Facebook:', error);
     }
-  }
+  };
 
   return (
     <Container>
@@ -204,7 +211,7 @@ const Login = ({ setIsAuthenticated }) => {
               placeholder="Enter Your Email"
               required
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Underline></Underline>
           </InputBox>
@@ -214,7 +221,7 @@ const Login = ({ setIsAuthenticated }) => {
               placeholder="Enter Your Password"
               required
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Underline></Underline>
           </InputBox>

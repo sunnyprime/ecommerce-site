@@ -43,7 +43,12 @@ const DetailDescription = styled.p`
   margin-top: 20px;
 `;
 
-const ProductDetail = ({ title="Jeans", price="20", imageSrc="https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1691039436_8510643.jpg?format=webp&w=300&dpr=1.3", description="Upgrade your style with these trendy denim jeans. Crafted from high-quality denim fabric, these jeans offer both comfort and style. The slim-fit design provides a modern and sleek look, perfect for casual outings and gatherings. The classic blue color makes them versatile to pair with any top or shirt. Whether you're going for a casual look or dressing up for a night out, these jeans are a must-have in your wardrobe." }) => {
+const ProductDetail = ({
+  title = 'Jeans',
+  price = '20',
+  imageSrc = 'https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1691039436_8510643.jpg?format=webp&w=300&dpr=1.3',
+  description = "Upgrade your style with these trendy denim jeans. Crafted from high-quality denim fabric, these jeans offer both comfort and style. The slim-fit design provides a modern and sleek look, perfect for casual outings and gatherings. The classic blue color makes them versatile to pair with any top or shirt. Whether you're going for a casual look or dressing up for a night out, these jeans are a must-have in your wardrobe.",
+}) => {
   return (
     <DetailContainer>
       <DetailImage src={imageSrc} alt={title} />

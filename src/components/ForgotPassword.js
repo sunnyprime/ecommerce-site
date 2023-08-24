@@ -64,13 +64,15 @@ const ForgotPassword = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  const handleForgotPassword = async e => {
+  const handleForgotPassword = async (e) => {
     e.preventDefault();
 
     try {
       if (email) {
         await auth.sendPasswordResetEmail(email);
-        setSuccessMessage('Password reset email sent. Please check your inbox.');
+        setSuccessMessage(
+          'Password reset email sent. Please check your inbox.'
+        );
         setError('');
       } else {
         setError('Please enter your email address.');
@@ -96,7 +98,7 @@ const ForgotPassword = () => {
               placeholder="Enter Your Email"
               required
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Underline></Underline>
           </InputBox>
