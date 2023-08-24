@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import {auth} from '../services/Firebase';
+import { auth } from '../services/Firebase'; // Make sure you import auth from Firebase
 import { useHistory } from 'react-router-dom';
-import 'firebase/auth';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
-  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +26,6 @@ const Title = styled.div`
   font-size: 30px;
   font-weight: 600;
   margin: 20px 0 10px 0;
-  position: relative;
 `;
 
 const InputBox = styled.div`
@@ -67,9 +67,16 @@ const Option = styled.div`
   font-size: 14px;
   text-align: center;
   margin-top: 20px;
+
+  button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+  }
 `;
 
-const SocialLink = styled.a`
+const SocialLink = styled.button`
   display: block;
   height: 45px;
   width: 100%;
@@ -80,53 +87,124 @@ const SocialLink = styled.a`
   color: #fff;
   border-radius: 5px;
   transition: all 0.3s ease;
-  background: ${(props) => props.background};
+  background: #dd4b39;
+  border: none;
+  cursor: pointer;
   margin-top: 20px;
 
   &:hover {
-    background: ${(props) => props.hoverBackground};
+    background: #c23321;
   }
 
   i {
     padding-right: 12px;
     font-size: 20px;
   }
-`;
+};`
 
-const LoginPage = () => {
+const FacebookLink = styled.div`
+display: block;
+  height: 45px;
+  width: 100%;
+  font-size: 15px;
+  text-decoration: none;
+  padding-left: 20px;
+  line-height: 45px;
+  color: #fff;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  background: linear-gradient(to right, #1877f2, #1877f2, #1877f2);
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+
+  &:hover {
+    background: linear-gradient(to right, #1371e2, #1371e2, #1371e2);
+  }
+
+  i {
+    padding-right: 12px;
+    font-size: 20px;
+  }
+};
+`
+
+const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
 
   const history = useHistory();
 
+  const handleForgotPassword = async () => {
+    history.push('/forgot-password');
+  };
+
   const handleLogin = async e => {
     e.preventDefault();
-  
+
     try {
-      await auth.signInWithEmailAndPassword(email, password);
-      console.log('Logged in successfully');
-      history.push('/products'); // Redirect to the products page on successful login
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+      console.log('Logged in successfully:', user);
+
+      const idToken = await user.getIdToken();
+      localStorage.setItem('userToken', idToken);
+
+      setIsAuthenticated(true);
+      history.push('/products');
     } catch (error) {
       setError('Error logging in: ' + error.message);
       console.error('Error logging in:', error);
     }
   };
 
+  const handleGmailLogin = async () => {
+    try {
+      const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); // Use GoogleAuthProvider
+      const user = result.user;
+      console.log('Logged in with Gmail successfully:', user);
+
+      const idToken = await user.getIdToken();
+      localStorage.setItem('userToken', idToken);
+
+      setIsAuthenticated(true);
+      history.push('/products');
+    } catch (error) {
+      setError('Error logging in with Gmail: ' + error.message);
+      console.error('Error logging in with Gmail:', error);
+    }
+  };
+  const handleFacebookLogin = async () => {
+    try {
+      const result = await auth.signInWithPopup(new firebase.auth.FacebookAuthProvider()); // Use FacebookAuthProvider
+      const user = result.user;
+      console.log('Logged in with Facebook successfully:', user);
+
+      const idToken = await user.getIdToken();
+      localStorage.setItem('userToken', idToken);
+
+      setIsAuthenticated(true);
+      history.push('/products');
+    } catch (error) {
+      setError('Error logging in with Facebook: ' + error.message);
+      console.error('Error logging in with Facebook:', error);
+    }
+  }
 
   return (
     <Container>
       <AuthContainer>
         <Title>Login</Title>
-        {error? <p>{error}</p>:""}
-        <form onSubmit={(e) => e.preventDefault()}>
+        {error ? <p>{error}</p> : ''}
+        <form onSubmit={handleLogin}>
           <InputBox>
             <Input
               type="text"
               placeholder="Enter Your Email"
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
             />
             <Underline></Underline>
           </InputBox>
@@ -136,22 +214,31 @@ const LoginPage = () => {
               placeholder="Enter Your Password"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
             />
             <Underline></Underline>
           </InputBox>
-          <SubmitButton type="submit" value="Continue" onClick={handleLogin} />
+          <SubmitButton type="submit" value="Continue" />
         </form>
+        <Option>
+          <button type="button" onClick={handleForgotPassword}>
+            Forgot Password?
+          </button>
+        </Option>
         <Option>or Connect With Social Media</Option>
-        <SocialLink href="#" background="#00acee" hoverBackground="#1abeff">
-          <i className="fab fa-twitter"></i> Sign in With Twitter
+        <SocialLink onClick={handleGmailLogin}>
+          <i className="fab fa-google"></i> Sign in With Google
         </SocialLink>
-        <SocialLink href="#" background="#3b5998" hoverBackground="#476bb8">
+        <FacebookLink onClick={handleFacebookLogin}>
           <i className="fab fa-facebook-f"></i> Sign in With Facebook
-        </SocialLink>
+        </FacebookLink>
       </AuthContainer>
     </Container>
   );
 };
 
-export default LoginPage;
+Login.propTypes = {
+  setIsAuthenticated: PropTypes.func.isRequired,
+};
+
+export default Login;

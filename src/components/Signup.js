@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { auth } from '../services/Firebase';
-import {  useHistory } from 'react-router-dom';
-import 'firebase/auth';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
   display: flex;
@@ -24,7 +24,6 @@ const Title = styled.div`
   font-size: 30px;
   font-weight: 600;
   margin: 20px 0 10px 0;
-  position: relative;
 `;
 
 const InputBox = styled.div`
@@ -68,7 +67,7 @@ const Option = styled.div`
   margin-top: 20px;
 `;
 
-const SocialLink = styled.a`
+const SocialLink = styled.button`
   display: block;
   height: 45px;
   width: 100%;
@@ -79,11 +78,13 @@ const SocialLink = styled.a`
   color: #fff;
   border-radius: 5px;
   transition: all 0.3s ease;
-  background: ${(props) => props.background};
+  background: #dd4b39;
+  border: none;
+  cursor: pointer;
   margin-top: 20px;
 
   &:hover {
-    background: ${(props) => props.hoverBackground};
+    background: #c23321;
   }
 
   i {
@@ -92,7 +93,7 @@ const SocialLink = styled.a`
   }
 `;
 
-const SignupPage = () => {
+const Signup = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -103,22 +104,30 @@ const SignupPage = () => {
     e.preventDefault();
 
     try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      console.log('Signed up successfully');
-      history.push('/products'); // Redirect to the products page on successful signup
+      const userCredential = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      const user = userCredential.user;
+      console.log('Signed up successfully:', user);
+
+      const idToken = await user.getIdToken();
+      localStorage.setItem('userToken', idToken);
+
+      setIsAuthenticated(true);
+      history.push('/products');
     } catch (error) {
       setError('Error signing up: ' + error.message);
       console.error('Error signing up:', error);
     }
   };
 
-
   return (
     <Container>
       <AuthContainer>
-        <Title>Sign Up</Title>
-        {error? <p>{error}</p>:""}
-        <form onSubmit={(e) => e.preventDefault()}>
+        <Title>Signup</Title>
+        {error ? <p>{error}</p> : ''}
+        <form onSubmit={handleSignup}>
           <InputBox>
             <Input
               type="text"
@@ -139,18 +148,19 @@ const SignupPage = () => {
             />
             <Underline></Underline>
           </InputBox>
-          <SubmitButton type="submit" value="Sign Up" onClick={handleSignup} />
+          <SubmitButton type="submit" value="Sign Up" />
         </form>
-        <Option>or Sign Up With Social Media</Option>
-        <SocialLink href="#" background="#00acee" hoverBackground="#1abeff">
-          <i className="fab fa-twitter"></i> Sign Up With Twitter
-        </SocialLink>
-        <SocialLink href="#" background="#3b5998" hoverBackground="#476bb8">
-          <i className="fab fa-facebook-f"></i> Sign Up With Facebook
+        <Option>or Connect With Social Media</Option>
+        <SocialLink>
+          <i className="fab fa-google"></i> Sign up With Google
         </SocialLink>
       </AuthContainer>
     </Container>
   );
 };
 
-export default SignupPage;
+Signup.propTypes = {
+  setIsAuthenticated: PropTypes.func.isRequired,
+};
+
+export default Signup;
