@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'; // Import Link
 import Product from './Product';
+import { db } from '../services/Firebase'; 
 
 const ProductGrid = styled.div`
   display: grid;
@@ -17,27 +18,78 @@ const ProductGrid = styled.div`
   }
 `;
 
-const products = [
-  { id: 1, title: 'T-Shirt', price: 20, imageSrc: 'https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1657172777_8557030.jpg?w=480&dpr=1.3' },
-  { id: 2, title: 'Shirt', price: 30, imageSrc: 'https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1691049796_1191812.jpg?format=webp&w=300&dpr=1.3' },
-  { id: 3, title: 'Jeans', price: 40, imageSrc: 'https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1691039436_8510643.jpg?format=webp&w=300&dpr=1.3' },
-  { id: 4, title: 'Trousers', price: 25, imageSrc: 'https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1691838303_1450131.jpg?format=webp&w=300&dpr=1.3' },
-  // Add more products as needed
-];
+const Navbar = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #f0f0f0;
+  padding: 10px;
+  margin-bottom:20px;
+`;
+
+const CategoryButton = styled.button`
+  border: none;
+  background: none;
+  cursor: pointer;
+`;
+
+
 
 const ProductList = () => {
+  const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  useEffect(() => {
+    // Fetch products from Firebase
+    const fetchProducts = async () => {
+      try {
+        const productsCollection = await db.collection('products').get();
+        const productsData = productsCollection.docs.map(doc => doc.data());
+        setProducts(productsData);
+      } catch (error) {
+        console.error('Error fetching products: ', error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+  };
+  console.log("PRODUCT:",products);
+
+  const filteredProducts = selectedCategory === 'all' ? products : products.filter(product => product.type === selectedCategory);
   return (
-    <ProductGrid>
-      {products.map(product => (
-        <Link key={product.id} to={`/product/${product.id}`}>
-          <Product
-            title={product.title}
-            price={product.price}
-            imageSrc={product.imageSrc}
-          />
-        </Link>
-      ))}
-    </ProductGrid>
+    <div>
+      <Navbar>
+        <CategoryButton onClick={() => handleCategoryClick('all')}>
+          All
+        </CategoryButton>
+        <CategoryButton onClick={() => handleCategoryClick('shirt')}>
+          Shirt
+        </CategoryButton>
+        <CategoryButton onClick={() => handleCategoryClick('t-shirt')}>
+          T-Shirt
+        </CategoryButton>
+        <CategoryButton onClick={() => handleCategoryClick('jeans')}>
+          Jeans
+        </CategoryButton>
+        <CategoryButton onClick={() => handleCategoryClick('trousers')}>
+          Trousers
+        </CategoryButton>
+      </Navbar>
+      <ProductGrid>
+        {filteredProducts.map((product) => (
+          <Link key={product.id} to={`/product/${product.id}`}>
+            <Product
+              title={product.title}
+              price={product.price}
+              imageSrc={product.imageUrl}
+            />
+          </Link>
+        ))}
+      </ProductGrid>
+    </div>
   );
 };
 

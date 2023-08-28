@@ -1,6 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+// import ProductDetail from './ProductDetail';
 import styled from 'styled-components';
+import PropTypes from 'prop-types'
+// import firebase from 'firebase/compat/app'; // Import Firebase
+import 'firebase/compat/firestore'; // Import Firestore module
+import { db } from '../services/Firebase'; 
 
 const DetailContainer = styled.div`
   display: flex;
@@ -43,19 +48,39 @@ const DetailDescription = styled.p`
   margin-top: 20px;
 `;
 
-const ProductDetail = ({
-  title = 'Jeans',
-  price = '20',
-  imageSrc = 'https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1691039436_8510643.jpg?format=webp&w=300&dpr=1.3',
-  description = "Upgrade your style with these trendy denim jeans. Crafted from high-quality denim fabric, these jeans offer both comfort and style. The slim-fit design provides a modern and sleek look, perfect for casual outings and gatherings. The classic blue color makes them versatile to pair with any top or shirt. Whether you're going for a casual look or dressing up for a night out, these jeans are a must-have in your wardrobe.",
-}) => {
+const ProductDetail = () => {
+  const { productId } = useParams();
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const productRef = db.collection('products').doc("NabD1d5dOHr4ylN4VwLu");
+        const productDoc = await productRef.get();
+        if (productDoc.exists) {
+          const productData = { id: productDoc.id, ...productDoc.data() };
+          setProduct(productData);
+        } else {
+          console.log('Product not found');
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+  if (!product) {
+    return <p>Product not found</p>;
+  }
   return (
     <DetailContainer>
-      <DetailImage src={imageSrc} alt={title} />
+      <DetailImage src={product.imageUrl} alt={product.name} />
       <DetailInfo>
-        <DetailTitle>{title}</DetailTitle>
-        <DetailPrice>${price}</DetailPrice>
-        <DetailDescription>{description}</DetailDescription>
+        <DetailTitle>{product.name}</DetailTitle>
+        <DetailPrice>${product.price}</DetailPrice>
+        <DetailDescription>{product.description}</DetailDescription>
       </DetailInfo>
     </DetailContainer>
   );
